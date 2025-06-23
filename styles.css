@@ -1,0 +1,319 @@
+/* Importar fuente futurista */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+/* Reset y configuración base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Header principal con fondo de Stormtrooper */
+.hero-header {
+    height: 100vh;
+    background-image: url('./images/star-wars-stormtrooper-fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 5%;
+}
+
+.hero-overlay {
+    background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    padding: 3rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+}
+
+.hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    line-height: 0.9;
+    margin-bottom: 1rem;
+}
+
+.hero-starwars {
+    background: linear-gradient(45deg, #ffd700, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+}
+
+.hero-subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: #ffd700;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border-top: 2px solid #ffd700;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+/* Contenedor principal */
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+/* Contenedor de progreso */
+.progress-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 2px solid #ffd700;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.progress-bar-container {
+    background-color: #333;
+    border-radius: 0.5rem;
+    height: 1rem;
+    overflow: hidden;
+    margin-top: 0.5rem;
+    border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #ffd700, #ff8c00);
+    height: 100%;
+    transition: width 0.3s ease;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.progress-text {
+    font-size: 1.2rem;
+    color: #ffd700;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Botón de reset */
+.reset-button {
+    background: linear-gradient(135deg, #ad0013 0%, #8a000f 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-family: 'Orbitron', sans-serif;
+    border: 2px solid #ffd700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reset-button:hover {
+    background: linear-gradient(135deg, #8a000f 0%, #ad0013 100%);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Contenedor de línea temporal */
+.timeline-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+/* Categorías de la línea temporal */
+.timeline-category {
+    position: relative;
+}
+
+/* Tarjetas de categoría */
+.category-card {
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 1rem;
+    border: 3px solid #ffd700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(255, 215, 0, 0.5);
+    border-color: #ff8c00;
+}
+
+/* Overlay de las tarjetas */
+.category-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    padding: 2rem;
+    text-align: center;
+}
+
+.category-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    margin-bottom: 0.5rem;
+}
+
+.category-subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.category-progress {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    color: #ffd700;
+    font-weight: 600;
+}
+
+/* Contenido expandible de categorías */
+.category-content {
+    margin-top: 1rem;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 2px solid #ffd700;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+/* Elementos de lista */
+.checklist-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.checklist-item:hover {
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 0.5rem;
+}
+
+.checklist-item:last-child {
+    border-bottom: none;
+}
+
+.checklist-item input[type="checkbox"] {
+    margin-right: 1rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    accent-color: #ffd700;
+    border-radius: 0.25rem;
+}
+
+.checklist-item label {
+    cursor: pointer;
+    flex-grow: 1;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    transition: color 0.2s ease;
+}
+
+.line-through-text {
+    text-decoration: line-through;
+    color: #666;
+}
+
+/* Indicador de guardado */
+.save-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #436851 0%, #2d4a37 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border: 2px solid #ffd700;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.save-indicator.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .timeline-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .hero-header {
+        background-attachment: scroll;
+        padding-left: 2%;
+    }
+    
+    .hero-overlay {
+        padding: 2rem;
+    }
+    
+    .category-card {
+        height: 250px;
+    }
+    
+    .category-title {
+        font-size: 2rem;
+    }
+    
+    .main-container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-card {
+        height: 200px;
+    }
+    
+    .category-title {
+        font-size: 1.5rem;
+    }
+    
+    .category-overlay {
+        padding: 1rem;
+    }
+} 

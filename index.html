@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden Cronológico Star Wars - Línea de Tiempo Detallada</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Indicador de guardado automático -->
+    <div id="saveIndicator" class="save-indicator">
+        ✅ Progreso guardado automáticamente
+    </div>
+
+    <!-- Header Principal con fondo de Stormtrooper -->
+    <header class="hero-header">
+        <div class="hero-overlay">
+            <h1 class="hero-title">
+                ORDEN<br>
+                CRONOLÓGICO<br>
+                <span class="hero-starwars">STAR WARS</span>
+            </h1>
+            <p class="hero-subtitle">LÍNEA DE TIEMPO DETALLADA</p>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="main-container">
+        <!-- Contenedor de progreso general -->
+        <div class="progress-container">
+            <div class="progress-text">Progreso Total: <span id="totalProgress">0</span>%</div>
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="text-xs text-gray-400 mt-2">
+                <span id="completedItems">0</span> de <span id="totalItems">0</span> elementos completados
+            </div>
+        </div>
+
+        <!-- Botón de Reinicio -->
+        <div class="flex justify-center mb-8">
+            <button id="resetButton" class="reset-button">
+                Reiniciar Progreso
+            </button>
+        </div>
+
+        <!-- Línea de Tiempo - Categorías ABY, BY, DBY -->
+        <div class="timeline-container">
+            
+            <!-- Categoría ABY (Antes de la Batalla de Yavin) -->
+            <div class="timeline-category" id="aby-category">
+                <div class="category-card" style="background-image: url('./images/ABY.webp')">
+                    <div class="category-overlay">
+                        <h3 class="category-title">ABY</h3>
+                        <p class="category-subtitle">(Antes de la Batalla de Yavin)</p>
+                        <div class="category-progress">
+                            <span id="aby-progress">0</span>% completado
+                        </div>
+                    </div>
+                </div>
+                <div class="category-content" id="aby-content" style="display: none;">
+                    <div id="aby-list" class="space-y-2">
+                        <!-- Los elementos ABY se insertarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categoría BY (Batalla de Yavin) -->
+            <div class="timeline-category" id="by-category">
+                <div class="category-card" style="background-image: url('./images/BY.jpg')">
+                    <div class="category-overlay">
+                        <h3 class="category-title">BY</h3>
+                        <p class="category-subtitle">(Batalla de Yavin)</p>
+                        <div class="category-progress">
+                            <span id="by-progress">0</span>% completado
+                        </div>
+                    </div>
+                </div>
+                <div class="category-content" id="by-content" style="display: none;">
+                    <div id="by-list" class="space-y-2">
+                        <!-- Los elementos BY se insertarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categoría DBY (Después de la Batalla de Yavin) -->
+            <div class="timeline-category" id="dby-category">
+                <div class="category-card" style="background-image: url('./images/DBY.png')">
+                    <div class="category-overlay">
+                        <h3 class="category-title">DBY</h3>
+                        <p class="category-subtitle">(Después de la Batalla de Yavin)</p>
+                        <div class="category-progress">
+                            <span id="dby-progress">0</span>% completado
+                        </div>
+                    </div>
+                </div>
+                <div class="category-content" id="dby-content" style="display: none;">
+                    <div id="dby-list" class="space-y-2">
+                        <!-- Los elementos DBY se insertarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript personalizado -->
+    <script src="script.js"></script>
+</body>
+</html>
