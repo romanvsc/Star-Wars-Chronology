@@ -1,3 +1,93 @@
+// Configuración del audio de fondo
+document.addEventListener('DOMContentLoaded', function() {
+    const backgroundAudio = document.querySelector('.background-audio');
+    if (backgroundAudio) {
+        backgroundAudio.volume = 0.15;
+        
+        // Crear botón de mute
+        createAudioControlButton();
+        
+        // Configurar continuidad del audio
+        setupAudioContinuity(backgroundAudio);
+        
+        // Restaurar estado de mute
+        const isMuted = localStorage.getItem('starwars-audio-muted') === 'true';
+        if (isMuted) {
+            backgroundAudio.muted = true;
+            updateMuteButtonState(true);
+        }
+    }
+});
+
+// Crear botón de control de audio
+function createAudioControlButton() {
+    const audioButton = document.createElement('button');
+    audioButton.className = 'audio-control-btn';
+    audioButton.innerHTML = '🔊';
+    audioButton.title = 'Silenciar/Activar audio';
+    
+    audioButton.addEventListener('click', toggleAudioMute);
+    document.body.appendChild(audioButton);
+}
+
+// Alternar silencio del audio
+function toggleAudioMute() {
+    const backgroundAudio = document.querySelector('.background-audio');
+    const audioButton = document.querySelector('.audio-control-btn');
+    
+    if (backgroundAudio) {
+        const newMutedState = !backgroundAudio.muted;
+        backgroundAudio.muted = newMutedState;
+        
+        // Guardar estado en localStorage
+        localStorage.setItem('starwars-audio-muted', newMutedState.toString());
+        
+        // Actualizar apariencia del botón
+        updateMuteButtonState(newMutedState);
+    }
+}
+
+// Actualizar estado visual del botón de mute
+function updateMuteButtonState(isMuted) {
+    const audioButton = document.querySelector('.audio-control-btn');
+    if (audioButton) {
+        if (isMuted) {
+            audioButton.innerHTML = '🔇';
+            audioButton.classList.add('muted');
+            audioButton.title = 'Activar audio';
+        } else {
+            audioButton.innerHTML = '🔊';
+            audioButton.classList.remove('muted');
+            audioButton.title = 'Silenciar audio';
+        }
+    }
+}
+
+// Configurar continuidad del audio entre páginas
+function setupAudioContinuity(audioElement) {
+    // Restaurar tiempo de reproducción guardado
+    const savedTime = localStorage.getItem('starwars-audio-time');
+    if (savedTime && !isNaN(parseFloat(savedTime))) {
+        audioElement.addEventListener('loadeddata', function() {
+            audioElement.currentTime = parseFloat(savedTime);
+        });
+    }
+    
+    // Guardar tiempo de reproducción cada segundo
+    setInterval(() => {
+        if (audioElement && !audioElement.paused) {
+            localStorage.setItem('starwars-audio-time', audioElement.currentTime.toString());
+        }
+    }, 1000);
+    
+    // Guardar tiempo antes de cambiar de página
+    window.addEventListener('beforeunload', () => {
+        if (audioElement && !audioElement.paused) {
+            localStorage.setItem('starwars-audio-time', audioElement.currentTime.toString());
+        }
+    });
+}
+
 // Estructura de datos reorganizada por categorías ABY, BY, DBY
 const starWarsTimeline = {
     aby: {
