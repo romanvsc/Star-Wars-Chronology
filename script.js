@@ -372,15 +372,30 @@ function updateAllProgress() {
         }
     });
     
-    // Debug: mostrar progreso por categoría
-    console.log('Progreso por categoría:', categoryProgress);
+
     
-    // Actualizar progreso total
+    // Actualizar progreso total (solo si los elementos existen)
     const totalProgress = totalItemsCount > 0 ? Math.round((completedItemsCount / totalItemsCount) * 100) : 0;
-    document.getElementById('totalProgress').textContent = totalProgress;
-    document.getElementById('progressBar').style.width = totalProgress + '%';
-    document.getElementById('completedItems').textContent = completedItemsCount;
-    document.getElementById('totalItems').textContent = totalItemsCount;
+    
+    const totalProgressElement = document.getElementById('totalProgress');
+    if (totalProgressElement) {
+        totalProgressElement.textContent = totalProgress;
+    }
+    
+    const progressBarElement = document.getElementById('progressBar');
+    if (progressBarElement) {
+        progressBarElement.style.width = totalProgress + '%';
+    }
+    
+    const completedItemsElement = document.getElementById('completedItems');
+    if (completedItemsElement) {
+        completedItemsElement.textContent = completedItemsCount;
+    }
+    
+    const totalItemsElement = document.getElementById('totalItems');
+    if (totalItemsElement) {
+        totalItemsElement.textContent = totalItemsCount;
+    }
     
     // Actualizar progreso por categoría
     Object.keys(categoryProgress).forEach(category => {
@@ -405,6 +420,10 @@ function updateAllProgress() {
  * Genera una lista de elementos con checkboxes
  */
 function createChecklistItems(items, categoryPrefix) {
+    if (!items || !Array.isArray(items) || items.length === 0) {
+        return '';
+    }
+    
     return items.map((item, index) => {
         const checkboxId = `${categoryPrefix}-${index}`;
         
@@ -418,10 +437,10 @@ function createChecklistItems(items, categoryPrefix) {
 }
 
 /**
- * Inicializa la página
+ * Inicializa la página principal (solo vista previa, no listas completas)
  */
 function initTimeline() {
-    // Poblar las listas de cada categoría (solo para página principal)
+    // Solo configurar totales para la página principal (NO generar listas)
     Object.keys(starWarsTimeline).forEach(categoryKey => {
         const category = starWarsTimeline[categoryKey];
         
@@ -448,7 +467,9 @@ function initTimeline() {
  */
 function initSingleSection(sectionKey) {
     const category = starWarsTimeline[sectionKey];
-    if (!category) return;
+    if (!category) {
+        return;
+    }
     
     const listContainer = document.getElementById(`${sectionKey}-list`);
     
