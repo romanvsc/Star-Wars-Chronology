@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BY - Batalla de Yavin | Star Wars Chronology</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Indicador de guardado automático -->
+    <div id="saveIndicator" class="save-indicator">
+        ✅ Progreso guardado automáticamente
+    </div>
+
+    <!-- Header de sección -->
+    <header class="section-hero" style="background-image: url('./images/BY.jpg')">
+        <div class="section-hero-overlay">
+            <h1 class="section-hero-title">BY</h1>
+            <p class="section-hero-subtitle">Batalla de Yavin - Año 0</p>
+            <div class="section-progress-display">
+                <span id="by-progress">0</span>% completado
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="main-container">
+        <!-- Barra de navegación -->
+        <nav class="quick-nav">
+            <div class="nav-container">
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Inicio</span>
+                </a>
+                <a href="aby.html" class="nav-link">
+                    <span class="nav-icon">⚔️</span>
+                    <span class="nav-text">ABY</span>
+                </a>
+                <a href="by.html" class="nav-link active">
+                    <span class="nav-icon">🌌</span>
+                    <span class="nav-text">BY</span>
+                </a>
+                <a href="dby.html" class="nav-link">
+                    <span class="nav-icon">🚀</span>
+                    <span class="nav-text">DBY</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Información de la era -->
+        <div class="era-info">
+            <h2 class="era-title">Era BY (Batalla de Yavin - Año 0)</h2>
+            <p class="era-description">
+                El momento más icónico de Star Wars: la destrucción de la primera Estrella de la Muerte. 
+                Este evento marca el punto de referencia temporal para toda la cronología de la galaxia muy, muy lejana.
+            </p>
+            <div class="era-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="by-completed">0</span>
+                    <span class="stat-label">Completados</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="by-total">0</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="by-percentage">0</span>%
+                    <span class="stat-label">Progreso</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de contenido -->
+        <div class="content-section">
+            <div id="by-list" class="checklist-container">
+                <!-- Los elementos BY se insertarán aquí dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="navigation-buttons">
+            <a href="aby.html" class="nav-button-large back">
+                ← Anterior: ABY
+            </a>
+            <a href="dby.html" class="nav-button-large next">
+                Siguiente: DBY →
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript personalizado -->
+    <script src="script.js"></script>
+    <script>
+        // Inicializar solo la sección BY
+        document.addEventListener('DOMContentLoaded', () => {
+            initSingleSection('by');
+        });
+    </script>
+</body>
+</html> 

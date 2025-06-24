@@ -30,82 +30,87 @@
 
     <!-- Contenedor principal -->
     <div class="main-container">
-        <!-- Contenedor de progreso general -->
-        <div class="progress-container">
-            <div class="progress-text">Progreso Total: <span id="totalProgress">0</span>%</div>
-            <div class="progress-bar-container">
-                <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+        <!-- Barra de navegación rápida -->
+        <nav class="quick-nav">
+            <div class="nav-container">
+                <a href="index.html" class="nav-link active">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Inicio</span>
+                </a>
+                <a href="aby.html" class="nav-link">
+                    <span class="nav-icon">⚔️</span>
+                    <span class="nav-text">ABY</span>
+                </a>
+                <a href="by.html" class="nav-link">
+                    <span class="nav-icon">🌌</span>
+                    <span class="nav-text">BY</span>
+                </a>
+                <a href="dby.html" class="nav-link">
+                    <span class="nav-icon">🚀</span>
+                    <span class="nav-text">DBY</span>
+                </a>
             </div>
-            <div class="text-xs text-gray-400 mt-2">
-                <span id="completedItems">0</span> de <span id="totalItems">0</span> elementos completados
+        </nav>
+
+        <!-- Sección de Progreso -->
+        <section id="progress-section" class="content-section active">
+            <!-- Contenedor de progreso general -->
+            <div class="progress-container">
+                <div class="progress-text">Progreso Total: <span id="totalProgress">0</span>%</div>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="text-xs text-gray-400 mt-2">
+                    <span id="completedItems">0</span> de <span id="totalItems">0</span> elementos completados
+                </div>
             </div>
-        </div>
 
-        <!-- Botón de Reinicio -->
-        <div class="flex justify-center mb-8">
-            <button id="resetButton" class="reset-button">
-                Reiniciar Progreso
-            </button>
-        </div>
+            <!-- Botón de Reinicio -->
+            <div class="flex justify-center mb-8">
+                <button id="resetButton" class="reset-button">
+                    Reiniciar Progreso
+                </button>
+            </div>
 
-        <!-- Línea de Tiempo - Categorías ABY, BY, DBY -->
-        <div class="timeline-container">
-            
-            <!-- Categoría ABY (Antes de la Batalla de Yavin) -->
-            <div class="timeline-category" id="aby-category">
-                <div class="category-card" style="background-image: url('./images/ABY.webp')">
-                    <div class="category-overlay">
-                        <h3 class="category-title">ABY</h3>
-                        <p class="category-subtitle">(Antes de la Batalla de Yavin)</p>
-                        <div class="category-progress">
-                            <span id="aby-progress">0</span>% completado
+            <!-- Vista previa de categorías -->
+            <div class="categories-preview">
+                <h2 class="preview-title">Navega por las Eras</h2>
+                <div class="preview-grid">
+                    <a href="aby.html" class="preview-card">
+                        <div class="preview-image" style="background-image: url('./images/ABY.webp')"></div>
+                        <div class="preview-content">
+                            <h3>ABY</h3>
+                            <p>Antes de la Batalla de Yavin</p>
+                            <div class="preview-progress">
+                                <span id="aby-preview-progress">0</span>% completado
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="category-content" id="aby-content" style="display: none;">
-                    <div id="aby-list" class="space-y-2">
-                        <!-- Los elementos ABY se insertarán aquí dinámicamente -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Categoría BY (Batalla de Yavin) -->
-            <div class="timeline-category" id="by-category">
-                <div class="category-card" style="background-image: url('./images/BY.jpg')">
-                    <div class="category-overlay">
-                        <h3 class="category-title">BY</h3>
-                        <p class="category-subtitle">(Batalla de Yavin)</p>
-                        <div class="category-progress">
-                            <span id="by-progress">0</span>% completado
+                    </a>
+                    <a href="by.html" class="preview-card">
+                        <div class="preview-image" style="background-image: url('./images/BY.jpg')"></div>
+                        <div class="preview-content">
+                            <h3>BY</h3>
+                            <p>Batalla de Yavin</p>
+                            <div class="preview-progress">
+                                <span id="by-preview-progress">0</span>% completado
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="category-content" id="by-content" style="display: none;">
-                    <div id="by-list" class="space-y-2">
-                        <!-- Los elementos BY se insertarán aquí dinámicamente -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Categoría DBY (Después de la Batalla de Yavin) -->
-            <div class="timeline-category" id="dby-category">
-                <div class="category-card" style="background-image: url('./images/DBY.png')">
-                    <div class="category-overlay">
-                        <h3 class="category-title">DBY</h3>
-                        <p class="category-subtitle">(Después de la Batalla de Yavin)</p>
-                        <div class="category-progress">
-                            <span id="dby-progress">0</span>% completado
+                    </a>
+                    <a href="dby.html" class="preview-card">
+                        <div class="preview-image" style="background-image: url('./images/DBY.png')"></div>
+                        <div class="preview-content">
+                            <h3>DBY</h3>
+                            <p>Después de la Batalla de Yavin</p>
+                            <div class="preview-progress">
+                                <span id="dby-preview-progress">0</span>% completado
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="category-content" id="dby-content" style="display: none;">
-                    <div id="dby-list" class="space-y-2">
-                        <!-- Los elementos DBY se insertarán aquí dinámicamente -->
-                    </div>
+                    </a>
                 </div>
             </div>
+        </section>
 
-        </div>
+
     </div>
 
     <!-- JavaScript personalizado -->

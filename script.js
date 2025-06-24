@@ -282,6 +282,9 @@ function updateAllProgress() {
         }
     });
     
+    // Debug: mostrar progreso por categoría
+    console.log('Progreso por categoría:', categoryProgress);
+    
     // Actualizar progreso total
     const totalProgress = totalItemsCount > 0 ? Math.round((completedItemsCount / totalItemsCount) * 100) : 0;
     document.getElementById('totalProgress').textContent = totalProgress;
@@ -293,9 +296,17 @@ function updateAllProgress() {
     Object.keys(categoryProgress).forEach(category => {
         const cat = categoryProgress[category];
         const progress = cat.total > 0 ? Math.round((cat.completed / cat.total) * 100) : 0;
+        
+        // Actualizar elementos de progreso en las secciones (si existen)
         const progressElement = document.getElementById(`${category}-progress`);
         if (progressElement) {
             progressElement.textContent = progress;
+        }
+        
+        // Actualizar elementos de progreso en la vista previa
+        const previewProgressElement = document.getElementById(`${category}-preview-progress`);
+        if (previewProgressElement) {
+            previewProgressElement.textContent = progress;
         }
     });
 }
@@ -317,11 +328,116 @@ function createChecklistItems(items, categoryPrefix) {
 }
 
 /**
- * Maneja el cambio en los checkboxes
+ * Inicializa la página
+ */
+function initTimeline() {
+    // Poblar las listas de cada categoría (solo para página principal)
+    Object.keys(starWarsTimeline).forEach(categoryKey => {
+        const category = starWarsTimeline[categoryKey];
+        
+        // Actualizar totales de categoría
+        categoryProgress[categoryKey].total = category.items.length;
+        totalItemsCount += category.items.length;
+    });
+    
+    // Configurar botón de reset
+    const resetButton = document.getElementById('resetButton');
+    if (resetButton) {
+        resetButton.addEventListener('click', resetProgress);
+    }
+    
+    // Cargar progreso guardado
+    loadProgress();
+    
+    // Actualizar progreso inicial
+    updateAllProgress();
+}
+
+/**
+ * Inicializa una sección individual
+ */
+function initSingleSection(sectionKey) {
+    const category = starWarsTimeline[sectionKey];
+    if (!category) return;
+    
+    const listContainer = document.getElementById(`${sectionKey}-list`);
+    
+    if (listContainer) {
+        listContainer.innerHTML = createChecklistItems(category.items, sectionKey);
+        
+        // Actualizar totales de categoría
+        categoryProgress[sectionKey].total = category.items.length;
+        totalItemsCount = category.items.length;
+        
+        // Configurar progreso solo para esta sección
+        Object.keys(categoryProgress).forEach(cat => {
+            if (cat !== sectionKey) {
+                categoryProgress[cat].total = 0;
+            }
+        });
+    }
+    
+    // Cargar progreso guardado
+    loadProgress();
+    
+    // Actualizar progreso específico de la sección
+    updateSingleSectionProgress(sectionKey);
+}
+
+/**
+ * Actualiza el progreso de una sección individual
+ */
+function updateSingleSectionProgress(sectionKey) {
+    const checkboxes = document.querySelectorAll(`input[id^="${sectionKey}-"]`);
+    let completed = 0;
+    
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            completed++;
+        }
+    });
+    
+    const total = starWarsTimeline[sectionKey].items.length;
+    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+    
+    // Actualizar elementos de progreso específicos de la sección
+    const progressElement = document.getElementById(`${sectionKey}-progress`);
+    if (progressElement) {
+        progressElement.textContent = progress;
+    }
+    
+    const completedElement = document.getElementById(`${sectionKey}-completed`);
+    if (completedElement) {
+        completedElement.textContent = completed;
+    }
+    
+    const totalElement = document.getElementById(`${sectionKey}-total`);
+    if (totalElement) {
+        totalElement.textContent = total;
+    }
+    
+    const percentageElement = document.getElementById(`${sectionKey}-percentage`);
+    if (percentageElement) {
+        percentageElement.textContent = progress;
+    }
+}
+
+/**
+ * Maneja el cambio en los checkboxes (versión mejorada para páginas individuales)
  */
 function handleCheckboxChange(checkbox) {
     updateItemVisualState(checkbox);
-    updateAllProgress();
+    
+    // Determinar si estamos en una página individual o en la principal
+    const currentSection = checkbox.id.split('-')[0];
+    const isMainPage = document.getElementById('progress-section') !== null;
+    
+    if (isMainPage) {
+        updateAllProgress();
+    } else {
+        updateSingleSectionProgress(currentSection);
+    }
+    
     saveProgress();
 }
 
@@ -345,64 +461,36 @@ function resetProgress() {
 }
 
 /**
- * Alterna la visibilidad del contenido de una categoría
+ * Navega a una sección específica
  */
-function toggleCategory(categoryId) {
-    const content = document.getElementById(`${categoryId}-content`);
-    const isVisible = content.style.display !== 'none';
-    
-    // Ocultar todas las categorías primero
-    ['aby', 'by', 'dby'].forEach(cat => {
-        const catContent = document.getElementById(`${cat}-content`);
-        if (catContent) {
-            catContent.style.display = 'none';
-        }
+function navigateToSection(sectionId) {
+    // Ocultar todas las secciones
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(section => {
+        section.classList.remove('active');
     });
     
-    // Mostrar la categoría seleccionada si no estaba visible
-    if (!isVisible) {
-        content.style.display = 'block';
-        content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-}
-
-/**
- * Inicializa la página
- */
-function initTimeline() {
-    // Poblar las listas de cada categoría
-    Object.keys(starWarsTimeline).forEach(categoryKey => {
-        const category = starWarsTimeline[categoryKey];
-        const listContainer = document.getElementById(`${categoryKey}-list`);
-        
-        if (listContainer) {
-            listContainer.innerHTML = createChecklistItems(category.items, categoryKey);
-            
-            // Actualizar totales de categoría
-            categoryProgress[categoryKey].total = category.items.length;
-            totalItemsCount += category.items.length;
-        }
-    });
-    
-    // Configurar event listeners para las tarjetas de categoría
-    ['aby', 'by', 'dby'].forEach(categoryId => {
-        const categoryCard = document.querySelector(`#${categoryId}-category .category-card`);
-        if (categoryCard) {
-            categoryCard.addEventListener('click', () => toggleCategory(categoryId));
-        }
-    });
-    
-    // Configurar botón de reset
-    const resetButton = document.getElementById('resetButton');
-    if (resetButton) {
-        resetButton.addEventListener('click', resetProgress);
+    // Mostrar la sección seleccionada
+    const targetSection = document.getElementById(`${sectionId}-section`);
+    if (targetSection) {
+        targetSection.classList.add('active');
     }
     
-    // Cargar progreso guardado
-    loadProgress();
+    // Actualizar botones de navegación
+    const navButtons = document.querySelectorAll('.nav-button');
+    navButtons.forEach(button => {
+        button.classList.remove('active');
+    });
     
-    // Actualizar progreso inicial
-    updateAllProgress();
+    const activeButton = document.querySelector(`[data-category="${sectionId}"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+    
+    // Hacer scroll suave a la sección
+    if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 // Inicializar cuando se cargue la página

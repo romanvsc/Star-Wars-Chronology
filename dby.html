@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBY - Después de la Batalla de Yavin | Star Wars Chronology</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Indicador de guardado automático -->
+    <div id="saveIndicator" class="save-indicator">
+        ✅ Progreso guardado automáticamente
+    </div>
+
+    <!-- Header de sección -->
+    <header class="section-hero" style="background-image: url('./images/DBY.png')">
+        <div class="section-hero-overlay">
+            <h1 class="section-hero-title">DBY</h1>
+            <p class="section-hero-subtitle">Después de la Batalla de Yavin</p>
+            <div class="section-progress-display">
+                <span id="dby-progress">0</span>% completado
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="main-container">
+        <!-- Barra de navegación -->
+        <nav class="quick-nav">
+            <div class="nav-container">
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Inicio</span>
+                </a>
+                <a href="aby.html" class="nav-link">
+                    <span class="nav-icon">⚔️</span>
+                    <span class="nav-text">ABY</span>
+                </a>
+                <a href="by.html" class="nav-link">
+                    <span class="nav-icon">🌌</span>
+                    <span class="nav-text">BY</span>
+                </a>
+                <a href="dby.html" class="nav-link active">
+                    <span class="nav-icon">🚀</span>
+                    <span class="nav-text">DBY</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Información de la era -->
+        <div class="era-info">
+            <h2 class="era-title">Era DBY (Después de la Batalla de Yavin)</h2>
+            <p class="era-description">
+                Desde la victoria de la Alianza Rebelde hasta el futuro de la galaxia. Esta era incluye la trilogía original, 
+                las secuelas, y todo el contenido que muestra las consecuencias de la destrucción del Imperio.
+            </p>
+            <div class="era-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="dby-completed">0</span>
+                    <span class="stat-label">Completados</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="dby-total">0</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="dby-percentage">0</span>%
+                    <span class="stat-label">Progreso</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de contenido -->
+        <div class="content-section">
+            <div id="dby-list" class="checklist-container">
+                <!-- Los elementos DBY se insertarán aquí dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Botones de navegación -->
+        <div class="navigation-buttons">
+            <a href="by.html" class="nav-button-large back">
+                ← Anterior: BY
+            </a>
+            <a href="index.html" class="nav-button-large next">
+                Volver al Inicio →
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript personalizado -->
+    <script src="script.js"></script>
+    <script>
+        // Inicializar solo la sección DBY
+        document.addEventListener('DOMContentLoaded', () => {
+            initSingleSection('dby');
+        });
+    </script>
+</body>
+</html> 
