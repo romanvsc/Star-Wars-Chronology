@@ -16,9 +16,13 @@
         ✅ Progreso guardado automáticamente
     </div>
 
+    <!-- Overlay de transición -->
+    <div id="transitionOverlay" class="transition-overlay"></div>
+
     <!-- Audio de fondo -->
-    <audio autoplay loop class="background-audio">
-        <source src="./audio/star-wars-marcha-imperial-efecto-de-sonido-sound-effect.mp3" type="audio/mpeg">
+    <audio loop class="background-audio" preload="auto">
+        <source src="./audio/starwars-breathing.mp3" type="audio/mpeg">
+        <source src="./audio/starwars-breathing.mp3" type="audio/mp3">
         Tu navegador no soporta audio HTML5.
     </audio>
 
@@ -103,6 +107,13 @@
     <script>
         // Inicializar solo la sección ABY
         document.addEventListener('DOMContentLoaded', () => {
+            // Configurar interceptores de navegación
+            setupPageTransitions();
+            
+            // Aplicar fade-in si venimos de una transición
+            applyPageFadeIn();
+            
+            // Inicializar sección ABY
             initSingleSection('aby');
         });
     </script>

@@ -16,8 +16,43 @@ document.addEventListener('DOMContentLoaded', function() {
             backgroundAudio.muted = true;
             updateMuteButtonState(true);
         }
+        
+        // Intentar reproducir el audio automáticamente
+        tryAutoplayAudio(backgroundAudio);
     }
 });
+
+// Función para intentar reproducir audio automáticamente
+function tryAutoplayAudio(audioElement) {
+    const playPromise = audioElement.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log('Audio iniciado automáticamente');
+        }).catch(error => {
+            console.log('Autoplay bloqueado por el navegador. Se requiere interacción del usuario.');
+            console.log('Error:', error);
+            
+            // Agregar event listeners para iniciar el audio con la primera interacción
+            const startAudioOnInteraction = () => {
+                audioElement.play().then(() => {
+                    console.log('Audio iniciado tras interacción del usuario');
+                }).catch(e => {
+                    console.log('Error al reproducir audio:', e);
+                });
+                
+                // Remover los listeners después de la primera reproducción
+                document.removeEventListener('click', startAudioOnInteraction);
+                document.removeEventListener('keydown', startAudioOnInteraction);
+                document.removeEventListener('touchstart', startAudioOnInteraction);
+            };
+            
+            document.addEventListener('click', startAudioOnInteraction);
+            document.addEventListener('keydown', startAudioOnInteraction);
+            document.addEventListener('touchstart', startAudioOnInteraction);
+        });
+    }
+}
 
 // Crear botón de control de audio
 function createAudioControlButton() {
@@ -27,7 +62,46 @@ function createAudioControlButton() {
     audioButton.title = 'Silenciar/Activar audio';
     
     audioButton.addEventListener('click', toggleAudioMute);
+    
+    // Agregar click para iniciar audio si no está reproduciéndose
+    audioButton.addEventListener('click', function() {
+        const backgroundAudio = document.querySelector('.background-audio');
+        if (backgroundAudio && backgroundAudio.paused) {
+            backgroundAudio.play().then(() => {
+                console.log('Audio iniciado desde botón de control');
+                updateAudioButtonState();
+            }).catch(e => {
+                console.log('Error al iniciar audio desde botón:', e);
+            });
+        }
+    });
+    
     document.body.appendChild(audioButton);
+    
+    // Actualizar estado del botón periódicamente
+    setInterval(updateAudioButtonState, 1000);
+}
+
+// Actualizar estado visual del botón de audio
+function updateAudioButtonState() {
+    const audioButton = document.querySelector('.audio-control-btn');
+    const backgroundAudio = document.querySelector('.background-audio');
+    
+    if (audioButton && backgroundAudio) {
+        if (backgroundAudio.paused) {
+            audioButton.innerHTML = '🔇';
+            audioButton.title = 'Click para reproducir audio';
+            audioButton.classList.add('muted');
+        } else if (backgroundAudio.muted) {
+            audioButton.innerHTML = '🔇';
+            audioButton.title = 'Activar audio';
+            audioButton.classList.add('muted');
+        } else {
+            audioButton.innerHTML = '🔊';
+            audioButton.title = 'Silenciar audio';
+            audioButton.classList.remove('muted');
+        }
+    }
 }
 
 // Alternar silencio del audio
@@ -572,37 +646,296 @@ function resetProgress() {
 }
 
 /**
- * Navega a una sección específica
+ * Muestra el overlay de transición
  */
-function navigateToSection(sectionId) {
-    // Ocultar todas las secciones
-    const sections = document.querySelectorAll('.content-section');
-    sections.forEach(section => {
-        section.classList.remove('active');
-    });
-    
-    // Mostrar la sección seleccionada
-    const targetSection = document.getElementById(`${sectionId}-section`);
-    if (targetSection) {
-        targetSection.classList.add('active');
-    }
-    
-    // Actualizar botones de navegación
-    const navButtons = document.querySelectorAll('.nav-button');
-    navButtons.forEach(button => {
-        button.classList.remove('active');
-    });
-    
-    const activeButton = document.querySelector(`[data-category="${sectionId}"]`);
-    if (activeButton) {
-        activeButton.classList.add('active');
-    }
-    
-    // Hacer scroll suave a la sección
-    if (targetSection) {
-        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function showTransitionOverlay() {
+    const overlay = document.getElementById('transitionOverlay');
+    if (overlay) {
+        overlay.classList.remove('hide');
+        overlay.classList.add('show');
     }
 }
 
-// Inicializar cuando se cargue la página
-document.addEventListener('DOMContentLoaded', initTimeline); 
+/**
+ * Oculta el overlay de transición
+ */
+function hideTransitionOverlay() {
+    const overlay = document.getElementById('transitionOverlay');
+    if (overlay) {
+        overlay.classList.remove('show');
+        overlay.classList.add('hide');
+        
+        // Remover clases después de la animación
+        setTimeout(() => {
+            overlay.classList.remove('hide');
+        }, 250);
+    }
+}
+
+/**
+ * Aplica efecto de fade-out a la sección activa
+ */
+function fadeOutCurrentSection() {
+    return new Promise((resolve) => {
+        const activeSection = document.querySelector('.content-section.active');
+        if (activeSection) {
+            activeSection.classList.add('fading-out');
+            
+            // Esperar a que termine la animación de fade-out
+            setTimeout(() => {
+                activeSection.classList.remove('active', 'fading-out');
+                resolve();
+            }, 500); // 0.5 segundos
+        } else {
+            resolve();
+        }
+    });
+}
+
+/**
+ * Aplica efecto de fade-in a la nueva sección
+ */
+function fadeInNewSection(targetSection) {
+    return new Promise((resolve) => {
+        if (targetSection) {
+            targetSection.classList.add('active', 'fading-in');
+            
+            // Esperar a que termine la animación de fade-in
+            setTimeout(() => {
+                targetSection.classList.remove('fading-in');
+                resolve();
+            }, 500); // 0.5 segundos
+        } else {
+            resolve();
+        }
+    });
+}
+
+/**
+ * Navega a una sección específica con transición suave
+ */
+async function navigateToSection(sectionId) {
+    // Verificar si ya estamos en la sección solicitada
+    const targetSection = document.getElementById(`${sectionId}-section`);
+    const currentActiveSection = document.querySelector('.content-section.active');
+    
+    if (targetSection === currentActiveSection) {
+        return; // Ya estamos en esta sección
+    }
+    
+    try {
+        // Paso 1: Mostrar overlay de transición (pantalla negra)
+        showTransitionOverlay();
+        
+        // Esperar un momento para que se vea el overlay
+        await new Promise(resolve => setTimeout(resolve, 250));
+        
+        // Paso 2: Fade-out de la sección actual
+        await fadeOutCurrentSection();
+        
+        // Paso 3: Actualizar botones de navegación
+        const navButtons = document.querySelectorAll('.nav-button');
+        navButtons.forEach(button => {
+            button.classList.remove('active');
+        });
+        
+        const activeButton = document.querySelector(`[data-category="${sectionId}"]`);
+        if (activeButton) {
+            activeButton.classList.add('active');
+        }
+        
+        // Paso 4: Fade-in de la nueva sección
+        await fadeInNewSection(targetSection);
+        
+        // Paso 5: Ocultar overlay de transición
+        hideTransitionOverlay();
+        
+        // Paso 6: Hacer scroll suave a la sección
+        if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+    } catch (error) {
+        console.error('Error durante la transición:', error);
+        // En caso de error, ocultar el overlay y mostrar la sección normalmente
+        hideTransitionOverlay();
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+    }
+}
+
+// Esta línea será reemplazada por el nuevo listener más abajo
+
+/**
+ * Intercepta la navegación entre páginas para aplicar transiciones
+ */
+function setupPageTransitions() {
+    const navLinks = document.querySelectorAll('.nav-link[href], .preview-card[href], .nav-button-large[href]');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Solo interceptar si no es la página actual y no es un enlace externo
+            if (href && href !== window.location.pathname && href !== window.location.href && !href.startsWith('http')) {
+                e.preventDefault();
+                
+                // Aplicar transición y navegar
+                transitionToPage(href);
+            }
+        });
+    });
+}
+
+/**
+ * Aplica transición y navega a una nueva página
+ */
+async function transitionToPage(href) {
+    try {
+        console.log('Iniciando transición a:', href);
+        
+        // Mostrar overlay de transición
+        showTransitionOverlay();
+        
+        // Aplicar fade-out al contenido actual
+        const mainContainer = document.querySelector('.main-container');
+        const heroHeader = document.querySelector('.hero-header');
+        const sectionHero = document.querySelector('.section-hero');
+        
+        [mainContainer, heroHeader, sectionHero].forEach(element => {
+            if (element) {
+                element.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(-20px)';
+            }
+        });
+        
+        // Esperar a que termine la transición de salida
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Guardar estado de que estamos en transición
+        sessionStorage.setItem('pageTransition', 'true');
+        
+        console.log('Navegando a nueva página');
+        
+        // Navegar a la nueva página
+        window.location.href = href;
+        
+    } catch (error) {
+        console.error('Error durante la transición de página:', error);
+        // En caso de error, limpiar overlay y navegar normalmente
+        hideTransitionOverlay();
+        window.location.href = href;
+    }
+}
+
+/**
+ * Aplica fade-in cuando se carga una nueva página
+ */
+function applyPageFadeIn() {
+    // Verificar si venimos de una transición
+    const isFromTransition = sessionStorage.getItem('pageTransition') === 'true';
+    
+    if (isFromTransition) {
+        // Limpiar el flag
+        sessionStorage.removeItem('pageTransition');
+        
+        console.log('Aplicando fade-in de página');
+        
+        // Asegurar que el overlay esté visible inicialmente
+        const overlay = document.getElementById('transitionOverlay');
+        if (overlay) {
+            overlay.style.display = 'block';
+            overlay.style.opacity = '1';
+        }
+        
+        // Inicialmente ocultar el contenido
+        const mainContainer = document.querySelector('.main-container');
+        const heroHeader = document.querySelector('.hero-header');
+        const sectionHero = document.querySelector('.section-hero');
+        
+        // Preparar todos los elementos para el fade-in
+        [mainContainer, heroHeader, sectionHero].forEach(element => {
+            if (element) {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out';
+            }
+        });
+        
+        // Aplicar fade-in después de un breve momento
+        setTimeout(() => {
+            console.log('Iniciando fade-in');
+            
+            // Primero ocultar el overlay
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 250);
+            }
+            
+            // Luego mostrar el contenido
+            [mainContainer, heroHeader, sectionHero].forEach(element => {
+                if (element) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+            
+        }, 100); // Reducido el tiempo de espera
+    } else {
+        // Si no venimos de transición, asegurar que el contenido sea visible
+        const overlay = document.getElementById('transitionOverlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+            overlay.style.opacity = '0';
+        }
+        
+        const mainContainer = document.querySelector('.main-container');
+        const heroHeader = document.querySelector('.hero-header');
+        const sectionHero = document.querySelector('.section-hero');
+        
+        [mainContainer, heroHeader, sectionHero].forEach(element => {
+            if (element) {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }
+        });
+    }
+}
+
+// Configurar transiciones cuando se cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar interceptores de navegación
+    setupPageTransitions();
+    
+    // Aplicar fade-in si venimos de una transición
+    applyPageFadeIn();
+    
+    // Timeout de seguridad para asegurar que el overlay nunca se quede visible permanentemente
+    setTimeout(() => {
+        const overlay = document.getElementById('transitionOverlay');
+        if (overlay && overlay.style.display !== 'none') {
+            console.log('Timeout de seguridad: ocultando overlay');
+            overlay.style.opacity = '0';
+            overlay.style.display = 'none';
+            
+            // Asegurar que el contenido sea visible
+            const mainContainer = document.querySelector('.main-container');
+            const heroHeader = document.querySelector('.hero-header');
+            const sectionHero = document.querySelector('.section-hero');
+            
+            [mainContainer, heroHeader, sectionHero].forEach(element => {
+                if (element) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+    }, 3000); // 3 segundos de timeout de seguridad
+    
+    // Inicializar cronología
+    initTimeline();
+}); 

@@ -16,111 +16,86 @@
         ✅ Progreso guardado automáticamente
     </div>
 
+    <!-- Overlay de transición -->
+    <div id="transitionOverlay" class="transition-overlay"></div>
+
     <!-- Audio de fondo -->
-    <audio autoplay loop class="background-audio">
-        <source src="./audio/star-wars-marcha-imperial-efecto-de-sonido-sound-effect.mp3" type="audio/mpeg">
+    <audio loop class="background-audio" preload="auto">
+        <source src="./audio/starwars-breathing.mp3" type="audio/mpeg">
+        <source src="./audio/starwars-breathing.mp3" type="audio/mp3">
         Tu navegador no soporta audio HTML5.
     </audio>
 
-    <!-- Header Principal con fondo de video -->
-    <header class="hero-header">
-        <video autoplay muted loop class="hero-video">
-            <source src="./video/0624.mp4" type="video/mp4">
-            Tu navegador no soporta videos HTML5.
-        </video>
-        <div class="hero-overlay">
-            <h1 class="hero-title">
-                ORDEN<br>
-                CRONOLÓGICO<br>
-                <span class="hero-starwars">STAR WARS</span>
-            </h1>
-            <p class="hero-subtitle">LÍNEA DE TIEMPO DETALLADA</p>
+    <!-- Video de fondo -->
+    <video autoplay muted loop class="hero-video">
+        <source src="./video/0624.mp4" type="video/mp4">
+        Tu navegador no soporta videos HTML5.
+    </video>
+
+    <!-- Navegación superior -->
+    <nav class="top-navigation">
+        <div class="nav-brand">
+            <div class="star-wars-logo">
+                <img src="./images/star-wars-logo.png" alt="Star Wars Logo">
+            </div>
         </div>
-    </header>
+        <div class="nav-links">
+            <a href="index.html" class="nav-item active">INICIO</a>
+            <a href="aby.html" class="nav-item">ABY</a>
+            <a href="by.html" class="nav-item">BY</a>
+            <a href="dby.html" class="nav-item">DBY</a>
+        </div>
+    </nav>
 
-    <!-- Contenedor principal -->
-    <div class="main-container">
-        <!-- Barra de navegación rápida -->
-        <nav class="quick-nav">
-            <div class="nav-container">
-                <a href="index.html" class="nav-link active nav-r2d2">
-                    <div class="nav-overlay"></div>
-                    <span class="nav-text">Inicio</span>
-                </a>
-                <a href="aby.html" class="nav-link nav-ahsoka">
-                    <div class="nav-overlay"></div>
-                    <span class="nav-text">ABY</span>
-                </a>
-                <a href="by.html" class="nav-link nav-vader">
-                    <div class="nav-overlay"></div>
-                    <span class="nav-text">BY</span>
-                </a>
-                <a href="dby.html" class="nav-link nav-boba">
-                    <div class="nav-overlay"></div>
-                    <span class="nav-text">DBY</span>
-                </a>
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Título principal -->
+        <div class="main-title">
+            <h1 class="title-starwars">STAR WARS</h1>
+            <h2 class="title-subtitle">ORDEN CRONOLÓGICO<br>PROGRESIVO</h2>
+        </div>
+
+        <!-- Sección de progreso -->
+        <div class="progress-section">
+            <h3 class="progress-title">Tu progreso</h3>
+            <div class="progress-bar-main">
+                <div id="progressBar" class="progress-fill" style="width: 0%"></div>
             </div>
-        </nav>
+            <div class="progress-stats">
+                <span id="completedItems">0</span> de <span id="totalItems">0</span> elementos completados
+                (<span id="totalProgress">0</span>%)
+            </div>
+            
+            <!-- Botón de reinicio -->
+            <button id="resetButton" class="reset-btn">
+                Reiniciar Progreso
+            </button>
+        </div>
 
-        <!-- Sección de Progreso -->
-        <section id="progress-section" class="content-section active">
-            <!-- Contenedor de progreso general -->
-            <div class="progress-container">
-                <div class="progress-text">Progreso Total: <span id="totalProgress">0</span>%</div>
-                <div class="progress-bar-container">
-                    <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+        <!-- Enlaces rápidos a secciones -->
+        <div class="quick-links">
+            <a href="aby.html" class="quick-link aby-link">
+                <div class="link-title">ABY</div>
+                <div class="link-subtitle">Antes de la Batalla de Yavin</div>
+                <div class="link-progress">
+                    <span id="aby-preview-progress">0</span>% completado
                 </div>
-                <div class="text-xs text-gray-400 mt-2">
-                    <span id="completedItems">0</span> de <span id="totalItems">0</span> elementos completados
+            </a>
+            <a href="by.html" class="quick-link by-link">
+                <div class="link-title">BY</div>
+                <div class="link-subtitle">Batalla de Yavin</div>
+                <div class="link-progress">
+                    <span id="by-preview-progress">0</span>% completado
                 </div>
-            </div>
-
-            <!-- Botón de Reinicio -->
-            <div class="flex justify-center mb-8">
-                <button id="resetButton" class="reset-button">
-                    Reiniciar Progreso
-                </button>
-            </div>
-
-            <!-- Vista previa de categorías -->
-            <div class="categories-preview">
-                <h2 class="preview-title">Navega por las Eras</h2>
-                <div class="preview-grid">
-                    <a href="aby.html" class="preview-card">
-                        <div class="preview-image" style="background-image: url('./images/ABY.webp')"></div>
-                        <div class="preview-content">
-                            <h3>ABY</h3>
-                            <p>Antes de la Batalla de Yavin</p>
-                            <div class="preview-progress">
-                                <span id="aby-preview-progress">0</span>% completado
-                            </div>
-                        </div>
-                    </a>
-                    <a href="by.html" class="preview-card">
-                        <div class="preview-image" style="background-image: url('./images/BY.jpg')"></div>
-                        <div class="preview-content">
-                            <h3>BY</h3>
-                            <p>Batalla de Yavin</p>
-                            <div class="preview-progress">
-                                <span id="by-preview-progress">0</span>% completado
-                            </div>
-                        </div>
-                    </a>
-                    <a href="dby.html" class="preview-card">
-                        <div class="preview-image" style="background-image: url('./images/DBY.png')"></div>
-                        <div class="preview-content">
-                            <h3>DBY</h3>
-                            <p>Después de la Batalla de Yavin</p>
-                            <div class="preview-progress">
-                                <span id="dby-preview-progress">0</span>% completado
-                            </div>
-                        </div>
-                    </a>
+            </a>
+            <a href="dby.html" class="quick-link dby-link">
+                <div class="link-title">DBY</div>
+                <div class="link-subtitle">Después de la Batalla de Yavin</div>
+                <div class="link-progress">
+                    <span id="dby-preview-progress">0</span>% completado
                 </div>
-            </div>
-        </section>
-
-
+            </a>
+        </div>
     </div>
 
     <!-- JavaScript personalizado -->

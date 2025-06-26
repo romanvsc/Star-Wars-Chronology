@@ -38,12 +38,14 @@ body {
 
 /* Botón de mute flotante */
 .audio-control-btn {
+    /*Lo voy a posicionar para que se vea en la parte inferior derecha de la pantalla
+    Se movera con el scroll*/
     position: fixed;
-    top: 20px;
-    right: 20px;
+    bottom: 10px;
+    right: 10px;
     z-index: 1000;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(31, 40, 51, 0.9) 0%, rgba(11, 12, 16, 0.9) 100%);
     border: 2px solid var(--dorado-imperial);
@@ -89,15 +91,14 @@ body {
 }
 
 .hero-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
     min-width: 100%;
     min-height: 100%;
     width: auto;
     height: auto;
-    z-index: 1;
-    transform: translate(-50%, -50%);
+    z-index: -1;
     object-fit: cover;
 }
 
@@ -282,13 +283,63 @@ body {
 /* Secciones de contenido */
 .content-section {
     display: none;
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeInFromBlack 0.5s ease-in-out;
 }
 
 .content-section.active {
     display: block;
 }
 
+/* Estados de transición para secciones */
+.content-section.fading-out {
+    animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+.content-section.fading-in {
+    animation: fadeInFromBlack 0.5s ease-in-out forwards;
+}
+
+/* Estilos para transiciones de página */
+.main-container,
+.hero-header,
+.section-hero {
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, filter 0.5s ease-in-out;
+}
+
+/* Prevenir flash de contenido durante la carga */
+body.loading .main-container,
+body.loading .hero-header,
+body.loading .section-hero {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: brightness(0);
+}
+
+/* Mejorar el overlay de transición */
+.transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--negro-profundo);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.25s ease-in-out;
+}
+
+.transition-overlay.show {
+    display: block;
+    opacity: 1;
+}
+
+.transition-overlay.hide {
+    opacity: 0;
+}
+
+/* Animación fadeIn original */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -297,6 +348,51 @@ body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Nueva animación de desvanecimiento hacia afuera */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Nueva animación de entrada suave desde negro */
+@keyframes fadeInFromBlack {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: brightness(0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: brightness(1);
+    }
+}
+
+/* Animación para overlay de transición */
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes overlayFadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
     }
 }
 
@@ -830,4 +926,259 @@ body {
 .nav-button-large.next:hover {
     background: linear-gradient(135deg, var(--dorado-imperial) 0%, var(--azul-jedi) 100%);
     border-color: var(--azul-jedi);
+}
+
+/* Estilos para el nuevo diseño de página principal */
+
+/* Navegación superior */
+.top-navigation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(100%);
+}
+.star-wars-logo {
+    width: clamp(400px, 60vw, 800px);
+    height: 140px;
+    background-color: transparent;
+    display: flex;
+    transition: all 0.3s ease;
+}
+.star-wars-logo:hover {
+    filter: drop-shadow(0 0 30px rgba(180, 156, 104, 0.5));
+    transform: scale(1.05);
+}
+.nav-brand {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--dorado-imperial);
+    text-shadow: 0 0 10px rgba(180, 156, 104, 0.5);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-item {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gris-claro);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-item:hover {
+    color: var(--azul-jedi);
+    background: rgba(0, 136, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    color: var(--dorado-imperial);
+    background: rgba(180, 156, 104, 0.2);
+    border: 1px solid var(--dorado-imperial);
+}
+
+/* Contenido principal */
+.main-content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 6rem 2rem 2rem;
+    text-align: center;
+}
+
+/* Título principal */
+.main-title {
+    margin-bottom: 4rem;
+}
+
+.title-starwars {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    color: var(--blanco-humo);
+    text-shadow: 0 0 20px rgba(180, 156, 104, 0.5);
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--dorado-imperial), var(--azul-jedi));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.title-subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--blanco-humo);
+    text-shadow: 0 0 15px rgba(248, 248, 248, 0.3);
+    line-height: 1.2;
+    letter-spacing: 2px;
+}
+
+/* Sección de progreso */
+.progress-section {
+    background: linear-gradient(135deg, rgba(31, 40, 51, 0.9) 0%, rgba(11, 12, 16, 0.9) 100%);
+    backdrop-filter: blur(15px);
+    border: 2px solid var(--dorado-imperial);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    min-width: 400px;
+    box-shadow: 0 10px 30px rgba(180, 156, 104, 0.3);
+}
+
+.progress-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--blanco-humo);
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba(248, 248, 248, 0.3);
+}
+
+.progress-bar-main {
+    width: 100%;
+    height: 20px;
+    background: var(--negro-profundo);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    border: 1px solid var(--gris-claro);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--azul-jedi) 0%, var(--dorado-imperial) 100%);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+}
+
+.progress-stats {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: var(--gris-claro);
+    margin-bottom: 1.5rem;
+}
+
+.reset-btn {
+    background: linear-gradient(135deg, var(--rojo-sith) 0%, #8B0000 100%);
+    color: var(--blanco-humo);
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.reset-btn:hover {
+    background: linear-gradient(135deg, #8B0000 0%, var(--rojo-sith) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4);
+}
+
+/* Enlaces rápidos */
+.quick-links {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.quick-link {
+    background: linear-gradient(135deg, rgba(31, 40, 51, 0.8) 0%, rgba(11, 12, 16, 0.8) 100%);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--gris-claro);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    text-align: center;
+}
+
+.quick-link:hover {
+    transform: translateY(-5px);
+    border-color: var(--azul-jedi);
+    box-shadow: 0 10px 25px rgba(0, 136, 255, 0.3);
+}
+
+.link-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--dorado-imperial);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(180, 156, 104, 0.3);
+}
+
+.link-subtitle {
+    color: var(--gris-claro);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.link-progress {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    color: var(--azul-jedi);
+    font-size: 0.9rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .top-navigation {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+    }
+    
+    .nav-item {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .main-content {
+        padding: 8rem 1rem 2rem;
+    }
+    
+    .progress-section {
+        min-width: 300px;
+        padding: 2rem;
+    }
+    
+    .quick-links {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .quick-link {
+        min-width: 250px;
+    }
 } 
