@@ -906,8 +906,251 @@ function applyPageFadeIn() {
     }
 }
 
+/**
+ * Crear y manejar el efecto cinematográfico de entrada
+ */
+function createCinematicEffect() {
+    // Solo aplicar en la página principal
+    const currentPath = window.location.pathname;
+    const isMainPage = currentPath.endsWith('index.html') || 
+                      currentPath === '/' || 
+                      currentPath.endsWith('/') ||
+                      currentPath.includes('index.html');
+    
+    if (!isMainPage) {
+        console.log('No es página principal, saltando efecto cinematográfico');
+        return;
+    }
+    
+    console.log('Iniciando efecto cinematográfico');
+    
+    // FORZAR SCROLL AL INICIO CON MÚLTIPLES MÉTODOS
+    function forceScrollToTop() {
+        // Método 1: window.scrollTo
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        
+        // Método 2: Propiedades directas
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        
+        // Método 3: Usando requestAnimationFrame para garantizar
+        requestAnimationFrame(() => {
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        });
+        
+        console.log('Scroll forzado al inicio:', window.pageYOffset);
+    }
+    
+    // Ejecutar inmediatamente y múltiples veces para garantizar
+    forceScrollToTop();
+    
+    // Prevenir scroll durante la animación inicial
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = '0';
+    document.body.style.left = '0';
+    document.body.style.width = '100%';
+    
+    // Crear overlay cinematográfico
+    const cinematicOverlay = document.createElement('div');
+    cinematicOverlay.className = 'cinematic-overlay';
+    cinematicOverlay.id = 'cinematicOverlay';
+    document.body.appendChild(cinematicOverlay);
+    
+    // MEJORA: Crear sistema de partículas de estrellas
+    createStarParticles();
+    
+    // Agregar clases de loading a los elementos principales
+    const elementsToAnimate = [
+        '.main-content',
+        '.main-title', 
+        '.progress-section',
+        '.quick-links',
+        '.top-navigation'
+    ];
+    
+    elementsToAnimate.forEach(selector => {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.classList.add('loading');
+        }
+    });
+    
+    // Forzar scroll nuevamente antes de la animación
+    setTimeout(() => {
+        forceScrollToTop();
+        startCinematicSequence(elementsToAnimate);
+    }, 50);
+    
+    // Restaurar scroll después de la animación
+    setTimeout(() => {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.width = '';
+        
+        // Forzar scroll una vez más después de restaurar
+        forceScrollToTop();
+        console.log('Scroll restaurado y forzado al inicio');
+    }, 1900);
+}
+
+/**
+ * Crear sistema de partículas de estrellas
+ */
+function createStarParticles() {
+    // Solo crear partículas en la página principal
+    const currentPath = window.location.pathname;
+    const isMainPage = currentPath.endsWith('index.html') || 
+                      currentPath === '/' || 
+                      currentPath.endsWith('/') ||
+                      currentPath.includes('index.html');
+    
+    if (!isMainPage) {
+        return;
+    }
+    
+    console.log('Creando sistema de partículas de estrellas');
+    
+    // Crear contenedor principal de partículas
+    const starParticles = document.createElement('div');
+    starParticles.className = 'star-particles';
+    starParticles.id = 'starParticles';
+    document.body.appendChild(starParticles);
+    
+    // Crear partículas parpadeantes
+    const twinklingStars = document.createElement('div');
+    twinklingStars.className = 'twinkling-stars';
+    twinklingStars.id = 'twinklingStars';
+    document.body.appendChild(twinklingStars);
+    
+    // Optimización: Reducir partículas en móviles
+    if (window.innerWidth < 768) {
+        starParticles.style.opacity = '0.4';
+        twinklingStars.style.opacity = '0.3';
+        console.log('Partículas optimizadas para móvil');
+    }
+    
+    // Detectar dispositivos de baja potencia
+    const isLowPerformance = navigator.hardwareConcurrency < 4 || 
+                           /Android|iPhone|iPad/.test(navigator.userAgent) ||
+                           window.innerWidth < 768;
+    
+    if (isLowPerformance) {
+        starParticles.style.opacity = '0.3';
+        twinklingStars.style.opacity = '0.2';
+        // Reducir la frecuencia de animación
+        starParticles.style.animationDuration = '40s';
+        twinklingStars.style.animationDuration = '6s';
+        console.log('Partículas optimizadas para dispositivo de baja potencia');
+    }
+    
+    // Detectar preferencias de movimiento reducido
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (prefersReducedMotion.matches) {
+        starParticles.style.animation = 'none';
+        twinklingStars.style.animation = 'none';
+        console.log('Animaciones de partículas desactivadas por preferencias de accesibilidad');
+    }
+    
+    // Limpiar partículas al cambiar de página
+    window.addEventListener('beforeunload', () => {
+        if (starParticles) starParticles.remove();
+        if (twinklingStars) twinklingStars.remove();
+    });
+}
+
+/**
+ * Ejecutar la secuencia cinematográfica
+ */
+function startCinematicSequence(elementsToAnimate) {
+    console.log('Iniciando secuencia cinematográfica');
+    
+    // Remover clases de loading para activar las animaciones
+    // Usar timeouts escalonados para crear efecto de cascada más rápido
+    
+    // Main content (inmediato)
+    setTimeout(() => {
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            mainContent.classList.remove('loading');
+            console.log('Animación main-content iniciada');
+        }
+    }, 0);
+    
+    // Main title (200ms delay)
+    setTimeout(() => {
+        const mainTitle = document.querySelector('.main-title');
+        if (mainTitle) {
+            mainTitle.classList.remove('loading');
+            console.log('Animación main-title iniciada');
+        }
+    }, 200);
+    
+    // Progress section (400ms delay)
+    setTimeout(() => {
+        const progressSection = document.querySelector('.progress-section');
+        if (progressSection) {
+            progressSection.classList.remove('loading');
+            console.log('Animación progress-section iniciada');
+        }
+    }, 400);
+    
+    // Quick links (600ms delay)
+    setTimeout(() => {
+        const quickLinks = document.querySelector('.quick-links');
+        if (quickLinks) {
+            quickLinks.classList.remove('loading');
+            console.log('Animación quick-links iniciada');
+        }
+    }, 600);
+    
+    // Top navigation (800ms delay)
+    setTimeout(() => {
+        const topNavigation = document.querySelector('.top-navigation');
+        if (topNavigation) {
+            topNavigation.classList.remove('loading');
+            console.log('Animación top-navigation iniciada');
+        }
+    }, 800);
+    
+    // Limpiar overlay después de 1.8 segundos
+    setTimeout(() => {
+        const overlay = document.getElementById('cinematicOverlay');
+        if (overlay) {
+            overlay.classList.add('loaded');
+            console.log('Efecto cinematográfico completado');
+        }
+    }, 1800);
+}
+
+// EJECUTAR EFECTO CINEMATOGRÁFICO LO MÁS PRONTO POSIBLE
+// Forzar scroll inmediatamente cuando se ejecute el script
+(function() {
+    const currentPath = window.location.pathname;
+    const isMainPage = currentPath.endsWith('index.html') || 
+                      currentPath === '/' || 
+                      currentPath.endsWith('/') ||
+                      currentPath.includes('index.html');
+    
+    if (isMainPage) {
+        console.log('Forzando scroll inmediato al cargar script');
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }
+})();
+
 // Configurar transiciones cuando se cargue la página
 document.addEventListener('DOMContentLoaded', function() {
+    // Aplicar efecto cinematográfico (solo en página principal)
+    createCinematicEffect();
+    
     // Configurar interceptores de navegación
     setupPageTransitions();
     
